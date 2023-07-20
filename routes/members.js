@@ -29,12 +29,24 @@ router
   //멤버 조회
   .get((req, res) => {
     const { id } = req.params;
-    let sql = `SELECT * FROM member WHERE id LIKE '${id}'`;
-    conn.query(sql, (err, data) => {
+    let sql = `SELECT id, name, phone_number, address FROM member WHERE id LIKE '${id}'`;
+    conn.query(sql, (err, member) => {
       if (err) throw err;
-      else if (data.length === 0) {
+      else if (member.length === 0) {
         res.status(404).json({ message: "잘못된 요청입니다." });
-      } else res.json({ data: data, message: "SUCCESS" });
+      } else {
+        const boardsql = `SELECT B.id, B.title, B.content, B.time FROM board B INNER JOIN member M ON B.writer_id = M.id WHERE M.id = '${member[0].id}'`;
+        conn.query(boardsql, (err, writePost) => {
+          if (err) throw err;
+          else {
+            const data = Object.assign(member[0], {
+              writePost: writePost,
+              message: "SUCCESS",
+            });
+            res.json(data);
+          }
+        });
+      }
     });
   })
   // 멤버 정보 수정
