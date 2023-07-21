@@ -15,17 +15,9 @@ router.get("/list", (_, res) => {
   });
 });
 
-// 멤버 생성
-router.post("/upload", (req, res) => {
-  const sql = "INSERT INTO member SET ?";
-  conn.query(sql, req.body, (err) => {
-    if (err) throw err;
-    else res.status(200).json({ message: "SUCCESS" });
-  });
-});
-
 router
   .route("/:id")
+
   //멤버 조회
   .get((req, res) => {
     const { id } = req.params;
@@ -49,6 +41,7 @@ router
       }
     });
   })
+
   // 멤버 정보 수정
   .put((req, res) => {
     const sql = `UPDATE member SET ? WHERE id = '${req.params.id}'`;
@@ -57,6 +50,7 @@ router
       else res.status(200).json({ message: "SUCCESS" });
     });
   })
+
   // 멤버 삭제
   .delete((req, res) => {
     const sql = `DELETE FROM member WHERE id = '${req.params.id}'`;
