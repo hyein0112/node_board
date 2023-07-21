@@ -1,6 +1,24 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcrypt");
+const session = require("express-session");
+const axios = require("axios");
+
+require("dotenv").config();
+
+axios.default.withCredentials = true;
+
+const router = express.Router();
+
+router.use(
+  session({
+    secret: process.env.SESSION_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 3 * 864 * 100000,
+    },
+  })
+);
 
 // db 연결
 let db_config = require("../config/database");
@@ -36,11 +54,25 @@ router.post("/signin", (req, res) => {
     if (err) throw err;
     else if (data.length > 0) {
       bcrypt.compare(req.body.pw, data[0].pw, (_, result) => {
-        if (result) res.status(200).json({ message: "SUCCESS" });
-        else res.status(400).json({ message: "올바르지 않은 비밀번호입니다." });
+        if (result) {
+          req.session.sessionID = data[0].id;
+          res.status(200).json({ message: "SUCCESS" });
+        } else
+          res.status(400).json({ message: "올바르지 않은 비밀번호입니다." });
       });
     } else res.status(400).json({ message: "존재하지 않는 아이디입니다." });
   });
+});
+
+// 로그아웃
+router.post("/logout", (req, res) => {
+  if (req.session.sessionID) {
+    req.session.destroy((err) => {
+      if (err) console.log(err);
+      else res.status(200).json({ message: "SUCCESS" });
+    });
+  }
+  res.redirect("/");
 });
 
 module.exports = router;
