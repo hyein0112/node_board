@@ -11,6 +11,7 @@ const app = express();
 // db 연결
 let db_config = require("./config/database");
 let conn = db_config.init();
+db_config.connect(conn);
 
 app.use(
   session({
