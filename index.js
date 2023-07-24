@@ -33,4 +33,4 @@ app.use("/auth", authRouter);
 app.use("/members", membersRouter);
 app.use("/board", boardRouter);
 
-app.listen(3000);
+app.listen(8080);
