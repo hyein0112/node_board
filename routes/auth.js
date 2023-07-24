@@ -17,7 +17,7 @@ router.post("/signup", (req, res) => {
 
   bcrypt.hash(params[1], 10, (_, hash) => {
     params[1] = hash;
-    const sql = "INSERT INTO member VALUES (?, ?, ?, ? ,?)";
+    const sql = "INSERT INTO member VALUES (?, ?, ?, ?)";
     conn.query(sql, params, (err) => {
       if (err) throw err;
       else {
