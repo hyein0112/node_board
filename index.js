@@ -8,6 +8,10 @@ const boardRouter = require("./routes/board");
 
 const app = express();
 
+// db 연결
+let db_config = require("./config/database");
+let conn = db_config.init();
+
 app.use(
   session({
     secret: process.env.SESSION_KEY,
