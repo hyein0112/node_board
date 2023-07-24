@@ -4,7 +4,6 @@ const router = express.Router();
 // db 연결
 let db_config = require("../config/database");
 let conn = db_config.init();
-db_config.connect(conn);
 
 // 멤버 리스트 조회
 router.get("/list", (_, res) => {
