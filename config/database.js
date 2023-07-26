@@ -2,8 +2,8 @@ var mysql = require("mysql");
 require("dotenv").config();
 
 var db_info = {
-  host: "localhost",
-  port: "3306",
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   user: "root",
   password: process.env.DB_PW,
   database: "board",
