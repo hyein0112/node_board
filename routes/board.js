@@ -48,8 +48,8 @@ router
     if (!req.session.sessionID)
       res.status(400).json({ message: "로그인 되지 않은 사용자입니다." });
     else {
-      const sql = `UPDATE board SET ? WHERE id = '${req.params.id}'`;
-      conn.query(sql, req.body, (err) => {
+      const sql = `UPDATE board SET ? WHERE id = '${req.body.id}'`;
+      conn.query(sql, Object.values(req.body), (err) => {
         if (err) throw err;
         else {
           res.status(200).json({ message: "SUCCESS" });
@@ -60,7 +60,7 @@ router
 
   // 게시글 삭제
   .delete((req, res) => {
-    const sql = `DELETE FROM board WHERE id = '${req.params.id}'`;
+    const sql = `DELETE FROM board WHERE id = '${req.body.id}'`;
     conn.query(sql, (err) => {
       if (err) throw err;
       else res.status(200).json({ message: "SUCCESS" });
