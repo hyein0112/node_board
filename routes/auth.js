@@ -13,16 +13,26 @@ let conn = db_config.init();
 
 // 회원가입
 router.post("/signup", (req, res) => {
-  params = [req.body.id, req.body.pw, req.body.name, req.body.phone_number];
+  params = [req.body.id, req.body.pw, req.body.nickname, req.body.phone_number];
 
   bcrypt.hash(params[1], 10, (_, hash) => {
     params[1] = hash;
-    const sql =
-      "INSERT INTO member (id, pw, name, phone_number) VALUES (?, ?, ?, ?)";
-    conn.query(sql, params, (err) => {
+
+    const sql = `SELECT * FROM member WHERE id = '${params[0]}' OR phone_number = '${params[3]}'`;
+    conn.query(sql, (err, data) => {
       if (err) throw err;
-      else {
-        res.status(200).json({ message: "SUCCESS" });
+      else if (data.length >= 1) {
+        console.log(data);
+        res.status(400).json({ message: "이미 가입된 회원입니다." });
+      } else {
+        const sql =
+          "INSERT INTO member (id, pw, nickname, phone_number) VALUES (?, ?, ?, ?)";
+        conn.query(sql, params, () => {
+          if (err) throw err;
+          else {
+            res.status(200).json({ message: "SUCCESS" });
+          }
+        });
       }
     });
   });
