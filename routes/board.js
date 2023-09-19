@@ -9,7 +9,7 @@ let conn = db_config.init();
 router.get("/list", (req, res) => {
   const { q } = req.query;
   if (q) {
-    const sql = `SELECT * FROM board WHERE writer_id LIKE '%${q}%' OR writer_nickname LIKE '%${q}%' OR content LIKE '%${q}%'`;
+    const sql = `SELECT * FROM board WHERE writer_id LIKE '%${q}%' OR writer_nickname LIKE '%${q}%' OR content LIKE '%${q}%' OR title LIKE '%${q}%'`;
     conn.query(sql, (err, data) => {
       if (err) throw err;
       else if (data.length == 0)

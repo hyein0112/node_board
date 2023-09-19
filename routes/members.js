@@ -7,7 +7,7 @@ let conn = db_config.init();
 
 // 멤버 리스트 조회
 router.get("/list", (_, res) => {
-  var sql = "SELECT id, nickname, phone_number, profile_picture FROM member";
+  let sql = "SELECT id, nickname, phone_number, profile_picture FROM member";
   conn.query(sql, (err, data) => {
     if (err) throw err;
     else res.json({ data: data, message: "SUCCESS" });
