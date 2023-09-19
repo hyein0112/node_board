@@ -9,11 +9,11 @@ let conn = db_config.init();
 router.get("/list", (req, res) => {
   const { q } = req.query;
   if (q) {
-    const sql = `SELECT * FROM board WHERE writer_id LIKE '%${q}%' OR writer_name LIKE '%${q}%' OR content LIKE '%${q}%'`;
+    const sql = `SELECT * FROM board WHERE writer_id LIKE '%${q}%' OR writer_nickname LIKE '%${q}%' OR content LIKE '%${q}%'`;
     conn.query(sql, (err, data) => {
       if (err) throw err;
       else if (data.length == 0)
-        res.status(200).json({ message: `${q}에 대한 검색결과가 없습니다.` });
+        res.status(400).json({ message: `${q}에 대한 검색결과가 없습니다.` });
       else res.status(200).json({ data: data, message: "SUCCESS" });
     });
   } else {
@@ -30,7 +30,7 @@ router.post("/upload", (req, res) => {
   if (!req.session.sessionID)
     res.status(400).json({ message: "로그인 되지 않은 사용자입니다." });
   else {
-    const sql = `INSERT INTO board ( writer_id, writer_name, title, content, time) VALUES (?, ?, ?, ?, now());`;
+    const sql = `INSERT INTO board ( writer_id, writer_nickname, title, content, time) VALUES (?, ?, ?, ?, now());`;
     conn.query(sql, Object.values(req.body), (err) => {
       if (err) throw err;
       else {
